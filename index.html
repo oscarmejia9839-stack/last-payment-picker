@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choose a Master Sheet</title>
+  <style>
+    body { margin: 0; font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #202124; background: #fff; display: grid; place-items: center; min-height: 100vh; }
+    p { color: #5f6368; }
+  </style>
+</head>
+<body>
+  <p id="msg">Opening Google Drive…</p>
+
+  <script>
+    // Opened by the "Last Payment" Chrome extension. Shows Google's Drive picker,
+    // then hands the chosen sheet back to the extension. Holds no data of its own.
+    // The API key is public by design; it is restricted to the Picker API and this site.
+    const API_KEY = 'AIzaSyB88_8N-z0QQayBcjLTsKMQMJpTfmzZI0Y';
+    const APP_ID = '567970267989'; // Google Cloud project number
+
+    const hash = new URLSearchParams(location.hash.slice(1));
+    history.replaceState(null, '', location.pathname); // keep the token out of history
+    const token = hash.get('token');
+    const redirect = hash.get('redirect') || '';
+
+    function fail(text) { document.getElementById('msg').textContent = text; }
+
+    // Only ever send the result back to a Chrome extension's own redirect URL.
+    if (!token || !/^https:\/\/[a-p]{32}\.chromiumapp\.org\//.test(redirect)) {
+      fail('Open this page from the Last Payment extension.');
+    } else {
+      const s = document.createElement('script');
+      s.src = 'https://apis.google.com/js/api.js';
+      s.onload = () => gapi.load('picker', show);
+      s.onerror = () => fail('Could not load Google Drive.');
+      document.head.appendChild(s);
+    }
+
+    function show() {
+      const view = new google.picker.DocsView(google.picker.ViewId.SPREADSHEETS)
+        .setIncludeFolders(true)
+        .setMode(google.picker.DocsViewMode.LIST);
+      new google.picker.PickerBuilder()
+        .setTitle('Choose the Master Sheet')
+        .addView(view)
+        .setOAuthToken(token)
+        .setDeveloperKey(API_KEY)
+        .setAppId(APP_ID)
+        .setCallback(onPick)
+        .build()
+        .setVisible(true);
+    }
+
+    function onPick(data) {
+      if (data.action === google.picker.Action.PICKED) {
+        const doc = data.docs[0];
+        const url = new URL(redirect);
+        url.searchParams.set('id', doc.id);
+        url.searchParams.set('name', doc.name);
+        location.replace(url.toString());
+      } else if (data.action === google.picker.Action.CANCEL) {
+        fail('No sheet selected. You can close this window.');
+      }
+    }
+  </script>
+</body>
+</html>
