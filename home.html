@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Last Payment</title>
+  <style>
+    body { max-width: 640px; margin: 48px auto; padding: 0 20px; font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #202124; }
+    h1 { font-size: 28px; margin-bottom: 4px; } h2 { font-size: 18px; margin-top: 32px; }
+    .muted { color: #5f6368; } a { color: #1a73e8; }
+  </style>
+</head>
+<body>
+  <h1>Last Payment</h1>
+  <p class="muted">A Chrome extension for MCA funders who track their deals in a Google Sheets master sheet.</p>
+
+  <h2>What it does</h2>
+  <p>For every deal listed on the month tabs of a master sheet, Last Payment reads the deal's Payment
+  Activity from the funder's own LendTech CRM (using the person's existing CRM login) and fills in the
+  <strong>Last Payment Date</strong> and <strong>Last Payment Amount</strong> columns. Nothing else on the
+  sheet is touched.</p>
+
+  <h2>What it asks Google for</h2>
+  <p>Only the <em>"See, edit, create, and delete only the specific Google Drive files you use with this
+  app"</em> permission (<code>drive.file</code>). The extension can read and write the sheets you pick in the
+  file picker and nothing else in your Drive.</p>
+
+  <h2>Who it is for</h2>
+  <p>Private tool built for Vivian Capital Group and its partner funders. It is installed from a zip file,
+  not from the Chrome Web Store.</p>
+
+  <p><a href="privacy.html">Privacy policy</a> · Contact: <a href="mailto:oscarmejia9839@gmail.com">oscarmejia9839@gmail.com</a></p>
+</body>
+</html>
